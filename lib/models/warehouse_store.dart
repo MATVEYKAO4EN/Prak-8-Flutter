@@ -1,11 +1,15 @@
 import 'product.dart';
+import 'package:flutter/material.dart';
 
 class WarehouseStore {
   List<Product> products = [];
   List<StockMovement> movements = [];
 
+  VoidCallback? onDataChanged;
+
   void addProduct(Product product) {
     products.add(product);
+    _notifyListeners();
   }
 
   void updateQuantity(String productId, int newQuantity, String reason) {
@@ -22,6 +26,7 @@ class WarehouseStore {
 
       products[productIndex] = product.copyWith(quantity: newQuantity);
       movements.add(movement);
+      _notifyListeners();
     }
   }
 
@@ -36,6 +41,15 @@ class WarehouseStore {
       timestamp: DateTime.now(),
     );
     movements.add(movement);
+    _notifyListeners();
+  }
+
+  void updateProduct(Product updatedProduct) {
+    final index = products.indexWhere((p) => p.id == updatedProduct.id);
+    if (index != -1) {
+      products[index] = updatedProduct;
+      _notifyListeners();
+    }
   }
 
   List<Product> getLowStockProducts() {
@@ -49,4 +63,8 @@ class WarehouseStore {
   int get totalProductsCount => products.length;
 
   int get lowStockProductsCount => getLowStockProducts().length;
+
+  void _notifyListeners() {
+    onDataChanged?.call();
+  }
 }

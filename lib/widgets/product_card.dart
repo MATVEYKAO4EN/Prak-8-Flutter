@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import 'warehouse_inherited_widget.dart';
+import '../service_locator.dart';
+import '../models/warehouse_store.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final _store = getIt<WarehouseStore>();
 
-  const ProductCard({required this.product});
+  ProductCard({required this.product});
 
   @override
   Widget build(BuildContext context) {
-    final warehouse = WarehouseInheritedWidget.of(context);
-
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ListTile(
@@ -45,12 +45,10 @@ class ProductCard extends StatelessWidget {
               '${product.quantity}',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            // Кнопка увеличения количества
             IconButton(
               icon: Icon(Icons.add, size: 20),
               onPressed: () => _updateQuantity(context, product.quantity + 1),
             ),
-            // Кнопка удаления товара
             IconButton(
               icon: Icon(Icons.delete, size: 20, color: Colors.red),
               onPressed: () => _showDeleteConfirmation(context),
@@ -63,13 +61,11 @@ class ProductCard extends StatelessWidget {
 
   void _updateQuantity(BuildContext context, int newQuantity) {
     if (newQuantity >= 0) {
-      final warehouse = WarehouseInheritedWidget.of(context);
-      warehouse.store.updateQuantity(
+      _store.updateQuantity(
         product.id,
         newQuantity,
         'Ручное изменение',
       );
-      warehouse.updateState();
     }
   }
 
@@ -79,8 +75,7 @@ class ProductCard extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Удалить товар?'),
-          content: Text('Вы уверены, что хотите удалить "${product
-              .name}"? Это действие нельзя отменить.'),
+          content: Text('Вы уверены, что хотите удалить "${product.name}"? Это действие нельзя отменить.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -91,8 +86,15 @@ class ProductCard extends StatelessWidget {
                 backgroundColor: Colors.red,
               ),
               onPressed: () {
-                _deleteProduct(context);
+                _store.removeProduct(product.id);
                 Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Товар "${product.name}" удален'),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               },
               child: Text('Удалить', style: TextStyle(color: Colors.white)),
             ),
@@ -100,11 +102,5 @@ class ProductCard extends StatelessWidget {
         );
       },
     );
-  }
-
-  void _deleteProduct(BuildContext context) {
-    final warehouse = WarehouseInheritedWidget.of(context);
-    warehouse.store.removeProduct(product.id);
-    warehouse.updateState();
   }
 }

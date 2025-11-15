@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
-import '../widgets/warehouse_inherited_widget.dart';
+import '../service_locator.dart';
+import '../models/warehouse_store.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final _store = getIt<WarehouseStore>();
+
+  @override
+  void initState() {
+    super.initState();
+    _store.onDataChanged = _updateState;
+  }
+
+  void _updateState() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final warehouse = WarehouseInheritedWidget.of(context);
-    final lowStockProducts = warehouse.store.getLowStockProducts();
-    final totalProducts = warehouse.store.totalProductsCount;
+    final lowStockProducts = _store.getLowStockProducts();
+    final totalProducts = _store.totalProductsCount;
 
     return Scaffold(
       appBar: AppBar(title: Text('Панель управления')),
@@ -18,7 +37,6 @@ class DashboardScreen extends StatelessWidget {
             Row(
               children: [
                 _buildStatCard(
-                  context,
                   'Всего товаров',
                   totalProducts.toString(),
                   Icons.inventory_2,
@@ -26,7 +44,6 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 16),
                 _buildStatCard(
-                  context,
                   'Мало на складе',
                   lowStockProducts.length.toString(),
                   Icons.warning,
@@ -78,7 +95,6 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildStatCard(
-      BuildContext context,
       String title,
       String value,
       IconData icon,
@@ -110,5 +126,11 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _store.onDataChanged = null;
+    super.dispose();
   }
 }

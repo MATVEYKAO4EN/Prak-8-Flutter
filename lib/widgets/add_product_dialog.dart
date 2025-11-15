@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import 'warehouse_inherited_widget.dart';
+import '../service_locator.dart';
+import '../models/warehouse_store.dart';
 
 class AddProductDialog extends StatefulWidget {
   @override
@@ -14,11 +15,10 @@ class _AddProductDialogState extends State<AddProductDialog> {
   final _quantityController = TextEditingController();
   String _category = 'Прочее';
   String _unit = 'шт.';
+  final _store = getIt<WarehouseStore>();
 
   @override
   Widget build(BuildContext context) {
-    final warehouse = WarehouseInheritedWidget.of(context);
-
     return AlertDialog(
       title: Text('Добавить товар'),
       content: SingleChildScrollView(
@@ -106,8 +106,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 unit: _unit,
               );
 
-              warehouse.store.addProduct(product);
-              warehouse.updateState();
+              _store.addProduct(product);
               Navigator.pop(context);
             }
           },
