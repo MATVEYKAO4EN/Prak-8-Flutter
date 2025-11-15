@@ -15,7 +15,6 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Статистика
             Row(
               children: [
                 _buildStatCard(
@@ -37,7 +36,6 @@ class DashboardScreen extends StatelessWidget {
             ),
             SizedBox(height: 24),
 
-            // Список товаров с низким запасом
             Text(
               'Товары с низким запасом:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

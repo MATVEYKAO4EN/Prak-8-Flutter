@@ -37,7 +37,6 @@ class ProductCard extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Кнопка уменьшения количества
             IconButton(
               icon: Icon(Icons.remove, size: 20),
               onPressed: () => _updateQuantity(context, product.quantity - 1),
@@ -74,7 +73,6 @@ class ProductCard extends StatelessWidget {
     }
   }
 
-  // ДОБАВЛЯЕМ МЕТОД ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,

@@ -25,11 +25,9 @@ class WarehouseStore {
     }
   }
 
-  // ДОБАВЛЯЕМ МЕТОД УДАЛЕНИЯ
   void removeProduct(String productId) {
     products.removeWhere((p) => p.id == productId);
 
-    // Также можно добавить запись в движения для аудита
     final movement = StockMovement(
       productId: productId,
       previousQuantity: 0,

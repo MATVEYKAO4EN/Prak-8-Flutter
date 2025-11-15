@@ -17,7 +17,6 @@ class _WarehouseAppState extends State<WarehouseApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Получаем существующий InheritedWidget
     final existingInherited = WarehouseInheritedWidget.maybeOf(context);
 
     return WarehouseInheritedWidget(

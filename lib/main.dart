@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
     return WarehouseInheritedWidget(
       store: _store,
       updateState: () {
-        // Это будет переопределено в состоянии WarehouseApp
       },
       child: MaterialApp(
         title: 'Складской учет',
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: WarehouseApp(), // Теперь WarehouseApp будет внутри InheritedWidget
+        home: WarehouseApp(),
         debugShowCheckedModeBanner: false,
       ),
     );
